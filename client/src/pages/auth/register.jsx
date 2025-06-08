@@ -1,7 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {useState} from "react"
 import CommonForm from "../../components/common/form";
 import { registerFormControls } from "../../config/index";
+import { useDispatch } from "react-redux";
+import { registerUser } from "@/store/auth-slice";
+import { toast } from 'sonner';
 
 const initialState = {
     userName: '',
@@ -10,9 +13,20 @@ const initialState = {
 }
 function AuthRegister(){
     const [formData, setFormData] = useState(initialState);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    function onSubmit(){
-
+    function onSubmit(event){
+        event.preventDefault();
+        dispatch(registerUser(formData)).then((data)=>{
+            console.log(data);
+            if(data?.payload?.success) {
+                toast.success(data.payload.message);
+                navigate('/auth/login')
+            }{
+               toast.error(data.payload.message); 
+            }
+        });
     }
     return (
         <div className="mx-auto w-full max-w-md space-y-6">
