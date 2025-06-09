@@ -64,12 +64,13 @@ const loginUser = async(req, res)=>{
 
 
 // logout 
-const logoutUser = (req, res)=>{
-    res.clearCookie('token').json({
-        success: true, 
-        message: 'Logged Out successfully!'
-    });
+const logoutUser = (req, res) => {
+  res.clearCookie("token").json({
+    success: true,
+    message: "Logged out successfully!",
+  });
 };
+
 
 // auth middleware 
 const authMiddleware = async(req, res, next)=> {
