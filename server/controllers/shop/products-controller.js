@@ -39,7 +39,7 @@ const getFilteredProducts = async(req, res)=>{
           data: products  
         })
     }catch(e){
-        console.log(error);
+        console.log(e);
         res.status(500).json({
             success: false, 
             message: 'Some error occured'

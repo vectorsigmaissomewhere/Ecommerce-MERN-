@@ -9,6 +9,8 @@ import { fetchAllFilteredProducts, fetchProductDetails } from "@/store/shop/prod
 import ShoppingProductTitle from "@/components/shopping-view/product-tile";
 import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+import { toast } from "sonner";
 
 
 function createSearchParamsHelper(filterParams){
@@ -24,6 +26,7 @@ function createSearchParamsHelper(filterParams){
 function ShoppingListing(){
     const dispatch = useDispatch();
     const {productList, productDetails} = useSelector(state=>state.shopProducts);
+    const {user} = useSelector(state=>state.auth);
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState(null);
     const [searchParams, setSearchParams] = useSearchParams();
@@ -53,6 +56,17 @@ function ShoppingListing(){
     function handleGetProductDetails(getCurrentProductId){
         dispatch(fetchProductDetails(getCurrentProductId));
     }
+
+    function handleAddtoCart(getCurrentProductId){
+        console.log(getCurrentProductId);
+        dispatch(addToCart({userId:user?.id, productId: getCurrentProductId, quantity:1})).then((data)=>{
+            if(data?.payload?.success){
+                dispatch(fetchCartItems(user?.id));
+                toast.success('Product is added to cart');
+            }
+        });
+    }
+
     useEffect(()=>{
         setSort('price-lowtohigh');
         setFilters(JSON.parse(sessionStorage.getItem('filters')) || {});
@@ -100,7 +114,7 @@ function ShoppingListing(){
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
                 {
                     productList && productList.length > 0 ?
-                    productList.map(productItem=> <ShoppingProductTitle handleGetProductDetails={handleGetProductDetails} product={productItem} />) : null
+                    productList.map(productItem=> <ShoppingProductTitle handleGetProductDetails={handleGetProductDetails} product={productItem} handleAddtoCart={handleAddtoCart}/>) : null
                 }
             </div>
         </div>

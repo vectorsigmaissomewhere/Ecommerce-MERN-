@@ -11,6 +11,8 @@ import { toast } from 'sonner';
 import { setProductDetails } from "@/store/shop/products-slice";
 import { Label } from "../ui/label";
 import { useEffect, useState } from "react";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const dispatch = useDispatch();
@@ -21,6 +23,16 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     setOpen(false);
     dispatch(setProductDetails());
   }
+
+  function handleAddtoCart(getCurrentProductId){
+          console.log(getCurrentProductId);
+          dispatch(addToCart({userId:user?.id, productId: getCurrentProductId, quantity:1})).then((data)=>{
+              if(data?.payload?.success){
+                  dispatch(fetchCartItems(user?.id));
+                  toast.success('Product is added to cart');
+              }
+          });
+    }
 
 
 
@@ -75,7 +87,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               </Button>
             ) : (
               <Button
-                className="w-full"
+                className="w-full" onClick={()=>handleAddtoCart(productDetails?._id)}
               >
                 Add to Cart
               </Button>
