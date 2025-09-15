@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 
 import { Skeleton } from "@/components/ui/skeleton"
+import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 
 function App() {
   const {user, isAuthenticated, isLoading} = useSelector(state=>state.auth);
@@ -66,6 +67,7 @@ function App() {
           <Route path="listing" element={<ShoppingListing />} />
           <Route path="checkout" element={<ShoppingCheckout />} />
           <Route path="account" element={<ShoppingAccount />} />
+          <Route path="paypal-return" element={<PaypalReturnPage/>}/>
         </Route>
         <Route path="/unauth-page" element={<UnauthPage/>}/>
         <Route path="*" element={<NotFound />} />
