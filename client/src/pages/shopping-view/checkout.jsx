@@ -36,6 +36,8 @@ function ShoppingCheckout() {
 
             return;
         }
+        console.log("----------------");
+        console.log(currentSelectedAddress);
         if (currentSelectedAddress === null) {
             toast.error("Please select one address to proceed.");
 

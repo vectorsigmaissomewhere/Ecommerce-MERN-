@@ -95,3 +95,19 @@ npx shadcn-ui@latest init
 npm add -D @types/node 
 )
 ```
+
+
+Steps 
+```text
+- backend
+- create models 
+- create controllers 
+- create routes 
+- add route to server -> server.js 
+
+
+- frontend 
+- add api in store/slice
+- the slice in store.js 
+- go to component and reducer as const {} = userSelector(state=>state.adminOrder) -> which is in admin/store.js 
+```

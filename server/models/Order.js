@@ -12,7 +12,8 @@ const OrderSchema = new mongoose.Schema({
       quantity: Number,
     },
   ],
-  addressInfo: {
+  addressInfo: [
+  {
     addressId: String,
     address: String,
     city: String,
@@ -20,6 +21,7 @@ const OrderSchema = new mongoose.Schema({
     phone: String,
     notes: String,
   },
+],
   orderStatus: String,
   paymentMethod: String,
   paymentStatus: String,
