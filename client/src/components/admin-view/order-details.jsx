@@ -34,6 +34,7 @@ function AdminOrderDetailsView({orderDetails}) {
         dispatch(getOrderDetailsForAdmin(orderDetails?._id));
         dispatch(getAllOrdersForAdmin());
         setFormData(initialFormData);
+        toast.success(data?.payload?.message);
       }
     });
   }

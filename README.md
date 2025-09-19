@@ -99,6 +99,10 @@ npm add -D @types/node
 
 Steps 
 ```text
+-page navigation
+- config/index.js 
+
+
 - backend
 - create models 
 - create controllers 
