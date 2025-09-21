@@ -17,22 +17,37 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-
+  const { cartItems } = useSelector(state => state.shopCart);
 
   function handleDialogClose() {
     setOpen(false);
     dispatch(setProductDetails());
   }
 
-  function handleAddtoCart(getCurrentProductId){
-          console.log(getCurrentProductId);
-          dispatch(addToCart({userId:user?.id, productId: getCurrentProductId, quantity:1})).then((data)=>{
-              if(data?.payload?.success){
-                  dispatch(fetchCartItems(user?.id));
-                  toast.success('Product is added to cart');
-              }
-          });
+  function handleAddtoCart(getCurrentProductId, getTotalStock) {
+    let getCartItems = cartItems.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId === getCurrentProductId
+      );
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > getTotalStock) {
+          toast.error(`Only ${getQuantity} quantity can be added for this item`);
+
+          return;
+        }
+      }
     }
+    console.log(getCurrentProductId);
+    dispatch(addToCart({ userId: user?.id, productId: getCurrentProductId, quantity: 1 })).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast.success('Product is added to cart');
+      }
+    });
+  }
 
 
 
@@ -87,7 +102,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               </Button>
             ) : (
               <Button
-                className="w-full" onClick={()=>handleAddtoCart(productDetails?._id)}
+                className="w-full" onClick={() => handleAddtoCart(productDetails?._id, productDetails?.totalStock)}
               >
                 Add to Cart
               </Button>
@@ -97,103 +112,103 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           <div className="max-h-[300px] overflow-auto">
             <h2 className="text-xl font-bold mb-4">Reviews</h2>
             <div className="grid gap-6">
-                  <div className="flex gap-4">
-                    <Avatar className="w-10 h-10 border">
-                      <AvatarFallback>
-                        G
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold">Anish Chaudhary</h3>
-                      </div>
-                      <div className="flex items-center gap-0.5">
-                        <div className="flex items-center gap-0.5">
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                        </div>
-                      </div>
-                      <p className="text-muted-foreground">
-                        This is an awesome product
-                      </p>
+              <div className="flex gap-4">
+                <Avatar className="w-10 h-10 border">
+                  <AvatarFallback>
+                    G
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold">Anish Chaudhary</h3>
+                  </div>
+                  <div className="flex items-center gap-0.5">
+                    <div className="flex items-center gap-0.5">
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
                     </div>
                   </div>
+                  <p className="text-muted-foreground">
+                    This is an awesome product
+                  </p>
+                </div>
+              </div>
 
-                  <div className="flex gap-4">
-                    <Avatar className="w-10 h-10 border">
-                      <AvatarFallback>
-                        G
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold">Anish Chaudhary</h3>
-                      </div>
-                      <div className="flex items-center gap-0.5">
-                        <div className="flex items-center gap-0.5">
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                        </div>
-                      </div>
-                      <p className="text-muted-foreground">
-                        This is an awesome product
-                      </p>
+              <div className="flex gap-4">
+                <Avatar className="w-10 h-10 border">
+                  <AvatarFallback>
+                    G
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold">Anish Chaudhary</h3>
+                  </div>
+                  <div className="flex items-center gap-0.5">
+                    <div className="flex items-center gap-0.5">
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
                     </div>
                   </div>
-                  <div className="flex gap-4">
-                    <Avatar className="w-10 h-10 border">
-                      <AvatarFallback>
-                        G
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold">Anish Chaudhary</h3>
-                      </div>
-                      <div className="flex items-center gap-0.5">
-                        <div className="flex items-center gap-0.5">
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                        </div>
-                      </div>
-                      <p className="text-muted-foreground">
-                        This is an awesome product
-                      </p>
+                  <p className="text-muted-foreground">
+                    This is an awesome product
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <Avatar className="w-10 h-10 border">
+                  <AvatarFallback>
+                    G
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold">Anish Chaudhary</h3>
+                  </div>
+                  <div className="flex items-center gap-0.5">
+                    <div className="flex items-center gap-0.5">
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
                     </div>
                   </div>
-                  <div className="flex gap-4">
-                    <Avatar className="w-10 h-10 border">
-                      <AvatarFallback>
-                        G
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid gap-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold">Anish Chaudhary</h3>
-                      </div>
-                      <div className="flex items-center gap-0.5">
-                        <div className="flex items-center gap-0.5">
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                          <StarIcon className="w-5 h-5 full-primary" />
-                        </div>
-                      </div>
-                      <p className="text-muted-foreground">
-                        This is an awesome product
-                      </p>
+                  <p className="text-muted-foreground">
+                    This is an awesome product
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <Avatar className="w-10 h-10 border">
+                  <AvatarFallback>
+                    G
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold">Anish Chaudhary</h3>
+                  </div>
+                  <div className="flex items-center gap-0.5">
+                    <div className="flex items-center gap-0.5">
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
+                      <StarIcon className="w-5 h-5 full-primary" />
                     </div>
                   </div>
+                  <p className="text-muted-foreground">
+                    This is an awesome product
+                  </p>
+                </div>
+              </div>
             </div>
             <div className="mt-10 flex-col flex gap-2">
               <Label>Write a review</Label>
