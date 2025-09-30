@@ -12,17 +12,22 @@ import { setProductDetails } from "@/store/shop/products-slice";
 import { Label } from "../ui/label";
 import { useEffect, useState } from "react";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+import StarRatingComponent from "../common/star-rating";
 
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
+  const [reviewMsg, setReviewMsg] = useState("");
+  const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector(state => state.shopCart);
 
-  function handleDialogClose() {
-    setOpen(false);
-    dispatch(setProductDetails());
+  function handleRatingChange(getRating) {
+    console.log(getRating, "getRating");
+
+    setRating(getRating);
   }
+
 
   function handleAddtoCart(getCurrentProductId, getTotalStock) {
     let getCartItems = cartItems.items || [];
@@ -49,7 +54,31 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     });
   }
 
+  function handleDialogClose() {
+    setOpen(false);
+    dispatch(setProductDetails());
+    setRating(0);
+    setReviewMsg("");
+  }
 
+    function handleAddReview() {
+    dispatch(
+      addReview({
+        productId: productDetails?._id,
+        userId: user?.id,
+        userName: user?.userName,
+        reviewMessage: reviewMsg,
+        reviewValue: rating,
+      })
+    ).then((data) => {
+      if (data.payload.success) {
+        setRating(0);
+        setReviewMsg("");
+        dispatch(getReviews(productDetails?._id));
+        toast.success("Review is added successfully");
+      }
+    });
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleDialogClose} className="bg-white grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
@@ -213,12 +242,13 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             <div className="mt-10 flex-col flex gap-2">
               <Label>Write a review</Label>
               <div className="flex gap-1">
+                <StarRatingComponent rating={rating} handleRatingChange={handleRatingChange}/>
               </div>
               <Input
-                name="reviewMsg"
+                name="reviewMsg" value={reviewMsg} onChange={(event)=> setReviewMsg(event.target.value)}
                 placeholder="Write a review..."
               />
-              <Button
+              <Button onClick={handleAddReview} disabled={reviewMsg.trim() === ''}
               >
                 Submit
               </Button>
