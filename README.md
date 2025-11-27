@@ -67,12 +67,7 @@ npm install bcryptjs@2.4.3 cloudinary@2.4.0 cookie-parser@1.4.6 cors@2.8.5 doten
 
 About the Project setup 
 ```text
-username 
-anishbro501625
 
-password 
-O7cNxx4reZ9wkzqh
-mongodb+srv://anishbro501625:<db_password>@cluster0.4egnhwp.mongodb.net/
 
 
 
